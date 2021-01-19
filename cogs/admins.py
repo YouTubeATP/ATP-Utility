@@ -26,7 +26,7 @@ class Admins(commands.Cog):
                 json.dump(prefixes, f, indent=4)
             with open("prefix.json", "rb") as f:
                 client.upload_fileobj(f, "ansonbotaws", "prefix.json")
-            await ctx.send(f"My prefix has been changed to {newPrefix}\nPlease remember it!")
+            await ctx.send(f"My prefix has been changed to `{newPrefix}`\nPlease remember it!")
         else:
             return
 
