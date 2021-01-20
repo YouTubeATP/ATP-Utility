@@ -63,7 +63,7 @@ class YouTube(commands.Cog):
             client.upload_fileobj(f, "ansonbotaws", "prefix.json")
         await ctx.send(f"Registered notifications in <#{channel.id}> for channel ID {channelID}!")
 
-    @tasks.loop(seconds=30)
+    @tasks.loop(minutes=2)
     async def youtubeWatch(self):
         with open("ytcache.json", "r") as f:
             cache = json.load(f)
