@@ -5,6 +5,9 @@ from decouple import config # A better way to access .env files
 import boto3 # Package for AWS
 import json
 import os
+import sys
+import io
+import traceback
 
 ## AWS setup
 key = config("AWSKEY") # AWS Access Key ID
@@ -70,7 +73,7 @@ async def invite(ctx):
 
 @bot.command(name='exec')
 async def exec_command(ctx, *, arg1):
-    if str(ctx.author.id) == botdev:
+    if str(ctx.author.id) == owner:
         arg1 = arg1[6:-4]
         old_stdout = sys.stdout
         new_stdout = io.StringIO()
