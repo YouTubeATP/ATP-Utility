@@ -6,7 +6,9 @@
 - YouTube video notifications
 - Invite Manager
 - Other fun commands
-## To run
+## Bot invite link
+https://bit.ly/3bSPBmh
+## To run (self-host)
 ### Install all dependencies with `pip install -r requirements.txt`
 ### Set up environment variables:
 - `OWNER` - Bot owner/ operator's user ID
