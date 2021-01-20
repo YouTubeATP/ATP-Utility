@@ -70,13 +70,13 @@ class Help(commands.Cog):
         embedNG.add_field(name=f"`{ctx.prefix}ngfl [gamertag]`", value="Displays the friend list of a given player in the Minecraft server NetherGames.", inline=False)
         embedNG.set_footer(text="[] Required <> Optional")
         ## Page 9 - YouTube Commands
-        embedNG=discord.Embed(title="ATP Utility Bot Help", description="YouTube Commands", color=0xffffff)
-        embedNG.set_thumbnail(url="https://i.imgur.com/YUFIrJJ.png")
-        embedNG.add_field(name=f"`{ctx.prefix}register [youtubeChannelID] [discordChannel]`", value="Registers a YouTube channel and a discord channel for video upload notifications.", inline=False)
-        embedNG.add_field(name=f"`{ctx.prefix}deregister [youtubeChannelID] [discordChannel]`", value="Deregisters a YouTube channel and the corresponding discord channel from video upload notifications.", inline=False)
-        embedNG.set_footer(text="[] Required <> Optional")
+        embedYT=discord.Embed(title="ATP Utility Bot Help", description="YouTube Commands", color=0xffffff)
+        embedYT.set_thumbnail(url="https://i.imgur.com/YUFIrJJ.png")
+        embedYT.add_field(name=f"`{ctx.prefix}register [youtubeChannelID] [discordChannel]`", value="Registers a YouTube channel and a discord channel for video upload notifications.", inline=False)
+        embedYT.add_field(name=f"`{ctx.prefix}deregister [youtubeChannelID] [discordChannel]`", value="Deregisters a YouTube channel and the corresponding discord channel from video upload notifications.", inline=False)
+        embedYT.set_footer(text="[] Required <> Optional")
         ## Main code here
-        embeds = [embedGC, embedAdmin, embedAternos1, embedAternos2, embedC19HK, embedFun, embedInv, embedNG]
+        embeds = [embedGC, embedAdmin, embedAternos1, embedAternos2, embedC19HK, embedFun, embedInv, embedNG, embedYT]
         paginator = BotEmbedPaginator(ctx, embeds)
         await paginator.run()
 
