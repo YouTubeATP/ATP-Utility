@@ -13,5 +13,5 @@
 - `TOKEN` - Discord Bot token
 - `AWSKEY` - AWS Access Key ID
 - `AWSSECRET` - AWS Secret Access Key
-- `YTKEY` YouTube Data API v3 API Key
+- `YTKEY` - YouTube Data API v3 API Key
 ### Run using `python main.py`
