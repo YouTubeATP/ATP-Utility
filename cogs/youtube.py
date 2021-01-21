@@ -44,7 +44,7 @@ class YouTube(commands.Cog):
         if channelID not in youtubers:
             youtubers.update({f"{channelID}": [f"{channel}"]})
         else:
-            youtubers[channelID].append(str(channel.id))
+            youtubers[channelID].append(str(channel))
         with open("youtube.json", "w") as f:
             json.dump(youtubers, f, indent=4)
         with open("youtube.json", "rb") as f:
@@ -58,7 +58,7 @@ class YouTube(commands.Cog):
             await ctx.send("Invalid Channel ID!")
             return
         youtubers = self.getYoutubers()
-        youtubers[channelID].pop(str(channel.id))
+        youtubers[channelID].pop(str(channel))
         with open("youtube.json", "w") as f:
             json.dump(youtubers, f, indent=4)
         with open("youtube.json", "rb") as f:
