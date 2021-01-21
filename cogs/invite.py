@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions
+from discord.ext.commands import MissingPermissions, has_permissions
 import traceback
 import json
 from decouple import config
@@ -128,36 +128,34 @@ class Invite(commands.Cog):
         global invites
         try:
             invites[member.guild.id] = await member.guild.invites()
-        except discord.errors.Forbidden as exception:
+        except discord.errors.Forbidden:
             traceback.print_exc()
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def inviteChannel(self, ctx, *, channel):
-        with open('invitechannel.json', 'r') as f:
-            invc = json.load(f)
-        invc[ctx.guild.id] = channel.replace('<', '').replace('>', '').replace('#', '')
-        with open('invitechannel.json', 'w') as f:
-            json.dump(invc, f, indent=4)
-        await ctx.send(f"Invite manager channel has been set to {channel}!")
-
-    @inviteChannel.error
-    async def inviteChannel_error(error, ctx):
-        if isinstance(error, MissingPermissions):
+    async def inviteChannel(self, ctx, *, channel: str):
+        if ('administrator', True) in iter(ctx.author.permissions_in(ctx.channel)):
+            invc = json.loads(client.get_object(Bucket="ansonbotaws", Key="invitechannel.json")["Body"].read())
+            channel = channel[2:-1]
+            invc[ctx.guild.id] = channel
+            with open('invitechannel.json', 'w') as f:
+                json.dump(invc, f, indent=4)
+            with open("invitechannel.json", "rb") as f:
+                client.upload_fileobj(f, "ansonbotaws", "invitechannel.json")
+            await ctx.send(f"Invite manager channel has been set to <#{channel}>!")
+        else:
             await ctx.send("Sorry, but you don't have permission to do that.")
 
     @commands.command()
     async def inviteRemove(self, ctx):
-        with open('invitechannel.json', 'r') as f:
-            invc = json.load(f)
+        if ('administrator', True) in iter(ctx.author.permissions_in(ctx.channel)):
+            invc = json.loads(client.get_object(Bucket="ansonbotaws", Key="invitechannel.json")["Body"].read())
             invc.pop(ctx.guild.id)
-        with open('invitechannel.json', 'w') as f:
-            json.dump(invc, f, indent=4)
-        await ctx.send('Removed invite manager channel!')
-
-    @inviteRemove.error
-    async def inviteRemove_error(error, ctx):
-        if isinstance(error, MissingPermissions):
+            with open('invitechannel.json', 'w') as f:
+                json.dump(invc, f, indent=4)
+            with open("invitechannel.json", "rb") as f:
+                client.upload_fileobj(f, "ansonbotaws", "invitechannel.json")
+            await ctx.send('Removed invite manager channel!')
+        else:
             await ctx.send("Sorry, but you don't have permission to do that.")
 
 def setup(bot):

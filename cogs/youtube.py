@@ -35,23 +35,25 @@ class YouTube(commands.Cog):
         print("YouTube videos cached!")
 
     @commands.command()
-    async def register(self, ctx, channelID: str, channel: discord.channel):
+    async def register(self, ctx, channelID: str, channel: str):
+        channel = channel[2:-1]
         if not channelID.startswith("UC"):
             await ctx.send("Invalid Channel ID!")
             return
         youtubers = self.getYoutubers()
         if channelID not in youtubers:
-            youtubers.update({f"{channelID}": [f"{channel.id}"]})
+            youtubers.update({f"{channelID}": [f"{channel}"]})
         else:
             youtubers[channelID].append(str(channel.id))
         with open("youtube.json", "w") as f:
             json.dump(youtubers, f, indent=4)
         with open("youtube.json", "rb") as f:
             client.upload_fileobj(f, "ansonbotaws", "prefix.json")
-        await ctx.send(f"Registered notifications in <#{channel.id}> for channel ID {channelID}!")
+        await ctx.send(f"Registered notifications in <#{channel}> for channel ID {channelID}!")
 
     @commands.command()
-    async def deregister(self, ctx, channelID: str, channel: discord.channel):
+    async def deregister(self, ctx, channelID: str, channel: str):
+        channel = channel[2:-1]
         if not channelID.startswith("UC"):
             await ctx.send("Invalid Channel ID!")
             return
@@ -61,7 +63,7 @@ class YouTube(commands.Cog):
             json.dump(youtubers, f, indent=4)
         with open("youtube.json", "rb") as f:
             client.upload_fileobj(f, "ansonbotaws", "prefix.json")
-        await ctx.send(f"Registered notifications in <#{channel.id}> for channel ID {channelID}!")
+        await ctx.send(f"Deregistered notifications in <#{channel}> for channel ID {channelID}!")
 
     @tasks.loop(minutes=2)
     async def youtubeWatch(self):

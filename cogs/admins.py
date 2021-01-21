@@ -30,6 +30,11 @@ class Admins(commands.Cog):
         else:
             return
 
+    @changePrefix.error
+    async def changePrefix_error(self, ctx, error):
+        if isinstance(error, MissingPermissions):
+            await ctx.send("Sorry, but you do not have the permissions to do that.")
+
     @commands.command()
     async def clear(self, ctx, amount):
         if not await has_permissions(manage_channels=True).predicate(ctx):
