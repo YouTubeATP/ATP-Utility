@@ -1,7 +1,7 @@
 ## Imports 
 import discord
 from discord.ext import commands
-from decouple import config # A better way to access .env files
+from decouple import config, UndefinedValueError # A better way to access .env files
 import boto3 # Package for AWS
 import json
 import os
@@ -70,6 +70,22 @@ async def support(ctx):
 @bot.command()
 async def invite(ctx):
     await ctx.send("Here is the invite link for the bot:\nhttps://bit.ly/3bSPBmh")
+
+@bot.command(aliases=["environ", "env"])
+async def environment(ctx):
+    try:
+        env = config("ENV")
+    except UndefinedValueError:
+        await ctx.send("Environment undefined!")
+    else:
+        if env == "LOCAL":
+            await ctx.send(f"LOCAL\nI am running locally!\n**{round(bot.latency * 1000)}ms**")
+        elif env == "HEROKU":
+            await ctx.send(f"HEROKU\nI am running on Heroku!\n**{round(bot.latency * 1000)}ms**")
+        elif env == "REPL":
+            await ctx.send(f"REPL\nI am running on repl.it!\n**{round(bot.latency * 1000)}ms**")
+        else:
+            await ctx.send(f"Value undefined: {env}")
 
 @bot.command(name='exec')
 async def exec_command(ctx, *, arg1):
