@@ -8,7 +8,6 @@ import os
 import sys
 import io
 import traceback
-import time
 
 ## AWS setup
 key = config("AWSKEY") # AWS Access Key ID
