@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 from decouple import config
 import boto3
 import json
+import time
 
 ## AWS setup
 key = config("AWSKEY") # AWS Access Key ID
@@ -71,7 +72,12 @@ class YouTube(commands.Cog):
             cache = json.load(f)
             for channelkey, channelvalue in zip(list(self.getYoutubers().keys()), list(self.getYoutubers().values())):
                 new = self.getVideos(channelkey)['items']
-                old = cache[channelkey]['items']
+                try:
+                    old = cache[channelkey]['items']
+                except KeyError:
+                    self.youtubeCache()
+                    time.sleep(2)
+                    old = cache[channelkey]['items']
                 diff = new[0] != old[0]
                 if diff:
                     for dc in channelvalue:
