@@ -4,7 +4,6 @@ from googleapiclient.discovery import build
 from decouple import config
 import boto3
 import json
-import time
 
 ## AWS setup
 key = config("AWSKEY") # AWS Access Key ID
