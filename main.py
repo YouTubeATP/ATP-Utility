@@ -69,7 +69,6 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="mentions for prefix"))
     print('Bot status changed!')
     createFiles(files=files) # Create files first
-    time.sleep(5)
     loadExtensions() # Then load extensions
 
 ## Mention for prefix

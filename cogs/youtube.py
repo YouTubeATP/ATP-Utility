@@ -71,12 +71,7 @@ class YouTube(commands.Cog):
             cache = json.load(f)
             for channelkey, channelvalue in zip(list(self.getYoutubers().keys()), list(self.getYoutubers().values())):
                 new = self.getVideos(channelkey)['items']
-                try:
-                    old = cache[channelkey]['items']
-                except KeyError:
-                    self.youtubeCache()
-                    time.sleep(2)
-                    old = cache[channelkey]['items']
+                old = cache[channelkey]['items']
                 diff = new[0] != old[0]
                 if diff:
                     for dc in channelvalue:
@@ -89,6 +84,7 @@ class YouTube(commands.Cog):
 
     @youtubeWatch.before_loop
     async def before_youtubeWatch(self):
+        self.youtubeCache()
         await self.bot.wait_until_ready()
 
     @commands.Cog.listener()
