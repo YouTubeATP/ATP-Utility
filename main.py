@@ -47,7 +47,7 @@ files = [
     "auth.json",
     "cookie.json",
     "cookies.json",
-    "invitechanel.json",
+    "invitechannel.json",
     "invites.json",
     "youtube.json",
     "ytcache.json"
