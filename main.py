@@ -59,7 +59,7 @@ def loadExtensions(exts: list=None):
                 bot.load_extension(f'cogs.{i[:-3]}')
     else:
         for i in exts:
-            bot.load_extension(f"cogs.{exts}")
+            bot.load_extension(f"cogs.{i}")
     print('Extensions loaded!')
 
 @bot.event
