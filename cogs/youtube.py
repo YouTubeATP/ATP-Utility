@@ -33,7 +33,6 @@ class YouTube(commands.Cog):
             for channel in self.getYoutubers().keys():
                 youtubes.update({f"{channel}": self.getVideos(channel)})
             json.dump(youtubes, f, indent=4)
-        print("YouTube videos cached!")
 
     @commands.command()
     async def register(self, ctx, channelID: str, channel: str):
