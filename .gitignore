@@ -2,3 +2,10 @@
 /.vscode
 /__pycache__
 /.env
+/auth.json
+/cookie.json
+/cookies.json
+/invitechannel.json
+/invites.json
+/youtube.json
+/ytcache.json

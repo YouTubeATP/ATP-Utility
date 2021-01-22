@@ -25,8 +25,7 @@ def getPrefix(bot, message):
             json.dump(prefixes, f, indent=4)
         with open("prefix.json", "rb") as f:
             client.upload_fileobj(f, "ansonbotaws", "prefix.json")
-        ## Return default prefix
-        return "a!"
+        return "a!" # Return default prefix
     except AttributeError: # Likely a DM
         return "a!" # Return default prefix
 
@@ -36,17 +35,39 @@ bot.remove_command("help") # Remove built-in help command for custom help comman
 
 owner = config("OWNER") # User ID of the bot owner
 
+def createFiles(files: list):
+    for file in files:
+        f = open(file, "w")
+        f.write("{}")
+        f.close()
+
+files = [
+    "auth.json",
+    "cookie.json",
+    "cookies.json",
+    "invitechanel.json",
+    "invites.json",
+    "youtube.json",
+    "ytcache.json"
+]
+
+def loadExtensions(exts: list=None):
+    if not exts:
+        for i in os.listdir('./cogs'):
+            if i.endswith('.py'):
+                bot.load_extension(f'cogs.{i[:-3]}')
+    else:
+        for i in exts:
+            bot.load_extension(f"cogs.{exts}")
+    print('Extensions loaded!')
+
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user.name}#{bot.user.discriminator}!\nBot is ready.")
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="mentions for prefix"))
     print('Bot status changed!')
-
-## Load extensions
-for i in os.listdir('./cogs'):
-    if i.endswith('.py'):
-        bot.load_extension(f'cogs.{i[:-3]}')
-print('Extensions loaded!')
+    createFiles(files=files) # Create files first
+    loadExtensions() # Then load extensions
 
 ## Mention for prefix
 @bot.event
