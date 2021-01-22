@@ -13,7 +13,7 @@ class Help(commands.Cog):
         embedGC.set_thumbnail(url="https://i.imgur.com/YUFIrJJ.png")
         embedGC.add_field(name=f"`{ctx.prefix}ping`", value="Returns the bot's latency in milliseconds.", inline=True)
         embedGC.add_field(name=f"`{ctx.prefix}invite`", value="Sends the invite link of the bot.", inline=True)
-        embedGC.add_field(name=f"`{ctx.prefix}source`", value="Sends the GitHub repository of the bot.", inline=True)
+        embedGC.add_field(name=f"`{ctx.prefix}source <github | gitlab>`", value="Sends the GitHub and/ or GitLab repository(ies) of the bot.", inline=True)
         embedGC.add_field(name=f"`{ctx.prefix}support`", value="Sends the link to the bot's support server.", inline=True)
         embedGC.add_field(name=f"`{ctx.prefix}help`", value="This command.", inline=True)
         embedGC.set_footer(text="[] Required <> Optional")

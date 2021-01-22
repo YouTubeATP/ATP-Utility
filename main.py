@@ -81,9 +81,16 @@ async def on_message(message):
 async def ping(ctx):
     await ctx.send(f':ping_pong: Pong! The latency is **{round(bot.latency * 1000)}ms**.')
 
-@bot.command(aliases=["github"])
-async def source(ctx):
-    await ctx.send("Here is the GitHub repository for the bot:\nhttps://github.com/YouTubeATP/ATP-Utility")
+@bot.command()
+async def source(ctx, platform=None):
+    github = "Here is the GitHub repository for the bot:\nhttps://github.com/YouTubeATP/ATP-Utility"
+    gitlab = "Here is the GitLab repository for the bot:\nhttps://gitlab.com/YouTubeATP/ATP-Utility"
+    if not platform:
+        await ctx.send(f"{github}\n\n{gitlab}")
+    elif platform == "github":
+        await ctx.send(github)
+    elif platform == "gitlab":
+        await ctx.send(gitlab)
 
 @bot.command()
 async def support(ctx):
