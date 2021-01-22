@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
 import json
-import requests
-from bs4 import BeautifulSoup
 import traceback
 from decouple import config
 import boto3

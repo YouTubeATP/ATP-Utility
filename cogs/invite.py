@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions, has_permissions
 import traceback
 import json
 from decouple import config
