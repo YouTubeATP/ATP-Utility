@@ -15,7 +15,8 @@ secret = config("AWSSECRET") # AWS Secret Access Key
 client = boto3.client("s3", aws_access_key_id=key, aws_secret_access_key=secret) # Initialize boto3 client
 
 def getPrefix(bot, message):
-    prefixes = json.loads(client.get_object(Bucket="ansonbotaws", Key="prefix.json")["Body"].read()) # Gets the object from AWS, takes the body, reads it and converts it to dict
+    with open("prefix.json", "r") as f:
+        prefixes = json.load(f)
     try:
         return prefixes[str(message.guild.id)]
     except KeyError: # No prefix set up yet, likely a new guild
@@ -46,6 +47,7 @@ files = [
     "auth.json",
     "cookie.json",
     "cookies.json",
+    "prefix.json",
     "invitechannel.json",
     "invites.json",
     "youtube.json",
@@ -68,6 +70,8 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="mentions for prefix"))
     print('Bot status changed!')
     createFiles(files=files) # Create files first
+    with open("prefix.json", "w") as f:
+        json.dump(json.loads(client.get_object(Bucket="ansonbotaws", Key="youtube.json")["Body"].read()), f, indent=4)
     loadExtensions() # Then load extensions
 
 ## Mention for prefix
@@ -76,6 +80,11 @@ async def on_message(message):
     if bot.user in message.mentions:
         await message.channel.send(f"My prefix is `{getPrefix(bot=bot, message=message)}`")
     await bot.process_commands(message)
+
+## Message edit detection
+@bot.event
+async def on_message_edit(before, after):
+    await bot.process_commands(after)
 
 @bot.command()
 async def ping(ctx):
@@ -130,13 +139,13 @@ async def exec_command(ctx, *, arg1):
         except:
             x = traceback.format_exc()
             embed=discord.Embed(title=f'Execution Failed!', color=0xff0000)
-            embed.set_author(name="ATP City Bot")
+            embed.set_author(name="ATP Utility")
             embed.add_field(name="Code", value=f'```py\n{str(arg1)}\n```', inline=False)
             embed.add_field(name="Output", value=f'```\n{str(x)}\n```', inline=False)
             await ctx.send(embed = embed)
         else:
             embed=discord.Embed(title=f'Execution Success!', color=0x00ff00)
-            embed.set_author(name="ATP City Bot")
+            embed.set_author(name="ATP Utility")
             embed.add_field(name="Code", value=f'```py\n{str(arg1)}\n```', inline=False)
             embed.add_field(name="Output", value=f'```\n{str(output)}\n```', inline=False)
             await ctx.send(embed = embed)

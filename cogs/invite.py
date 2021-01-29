@@ -57,10 +57,11 @@ class Invite(commands.Cog):
             new_inv = await member.guild.invites()
             for invite in old_inv:
                 try:
-                    if invite.uses < int(self.code2inv(new_inv, invite.code).uses):
+                    if invite.uses < int(self.code2inv(new_inv, invite.code).uses): ## Found it!
                         invites[member.guild.id] = new_inv
                         invc = json.loads(client.get_object(Bucket="ansonbotaws", Key="invitechannel.json")["Body"].read())
-                        channel = self.bot.get_channel(int(invc[str(member.guild.id)]))
+                        channelid = invc.get(str(member.guild.id))
+                        channel = self.bot.get_channel(int(channelid))
                         embed=discord.Embed(title=f'{member.name} Joined!', color=0xff9000)
                         embed.add_field(name="Joined", value=f"<@{member.id}>", inline=True)
                         embed.add_field(name="Invited by", value=f"<@{invite.inviter.id}>", inline=True)
@@ -73,27 +74,30 @@ class Invite(commands.Cog):
                         else:
                             invsJson.update({f"{str(invite.inviter.id)}": 1})
                         await self.updateInvs(invsJson, member.guild.id)
+                        break
                     elif not self.code2inv(new_inv, invite.code):
                         continue
                 except AttributeError:
                     continue
-            if len(self.diff(li1=old_inv, li2=new_inv)) > 0:
-                invite = (self.diff(old_inv, new_inv))[0]
-                invites[member.guild.id] = new_inv
-                invc = json.loads(client.get_object(Bucket="ansonbotaws", Key="invitechannel.json")["Body"].read())
-                channel = self.bot.get_channel(int(invc[str(member.guild.id)]))
-                embed=discord.Embed(title=f'{member.name} Joined!', color=0xff9000)
-                embed.add_field(name="Joined", value=f"<@{member.id}>", inline=True)
-                embed.add_field(name="Invited by", value=f"<@{invite.inviter.id}>", inline=True)
-                embed.add_field(name="Joined with link", value=f"https://discord.gg/{invite.code}", inline=False)
-                await channel.send(embed=embed)
-                invsJson = await self.getInvs(member.guild.id)
-                if str(invite.inviter.id) in invsJson:
-                    invNo = int(invsJson[str(invite.inviter.id)])
-                    invsJson[str(invite.inviter.id)] = int(invNo + 1)
-                else:
-                    invsJson.update({f"{str(invite.inviter.id)}": 1})
-                await self.updateInvs(invsJson, member.guild.id)
+            else:
+                if len(self.diff(li1=old_inv, li2=new_inv)) > 0:
+                    invite = (self.diff(old_inv, new_inv))[0]
+                    invites[member.guild.id] = new_inv
+                    invc = json.loads(client.get_object(Bucket="ansonbotaws", Key="invitechannel.json")["Body"].read())
+                    channelid = invc.get(str(member.guild.id))
+                    channel = self.bot.get_channel(int(channelid))
+                    embed=discord.Embed(title=f'{member.name} Joined!', color=0xff9000)
+                    embed.add_field(name="Joined", value=f"<@{member.id}>", inline=True)
+                    embed.add_field(name="Invited by", value=f"<@{invite.inviter.id}>", inline=True)
+                    embed.add_field(name="Joined with link", value=f"https://discord.gg/{invite.code}", inline=False)
+                    await channel.send(embed=embed)
+                    invsJson = await self.getInvs(member.guild.id)
+                    if str(invite.inviter.id) in invsJson:
+                        invNo = int(invsJson[str(invite.inviter.id)])
+                        invsJson[str(invite.inviter.id)] = int(invNo + 1)
+                    else:
+                        invsJson.update({f"{str(invite.inviter.id)}": 1})
+                    await self.updateInvs(invsJson, member.guild.id)
 
     @commands.command(aliases=["invleader"])
     async def inviteleaderboard(self, ctx):
@@ -154,6 +158,6 @@ class Invite(commands.Cog):
             await ctx.send('Removed invite manager channel!')
         else:
             await ctx.send("Sorry, but you don't have permission to do that.")
-
+            
 def setup(bot):
     bot.add_cog(Invite(bot))

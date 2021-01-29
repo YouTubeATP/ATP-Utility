@@ -20,7 +20,7 @@ class Aternos(commands.Cog):
     async def generateAuthFile(self, ctx, token: str, *, headerCookie: str):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             auth = {}
-            auth.update({"token": token, "headerCookie": headerCookie})
+            auth.update({"headerCookie": headerCookie, "token": token})
             with open("auth.json", "w") as f:
                 json.dump(auth, f, indent=4)
             await ctx.send("Your Authentication File has been generated. Please avoid sharing or using the file in public servers.\nAternos commands are available in DMs only.", file=discord.File(fp="auth.json", filename="auth.json"))
@@ -38,7 +38,7 @@ class Aternos(commands.Cog):
     async def serverAuth(self, ctx, token: str, *, headerCookie: str):
         if isinstance(ctx.channel, discord.channel.TextChannel): # Checks if the message is sent in a server
             auth = {}
-            auth.update({"token": token, "headerCookie": headerCookie})
+            auth.update({"headerCookie": headerCookie, "token": token})
             cookies = json.loads(client.get_object(Bucket="ansonbotaws", Key="cookies.json")["Body"].read()) # Gets the object from AWS, takes the body, reads it and converts it to dict
             cookies.update({f"{ctx.guild.id}": auth})
             ## Upload to AWS
@@ -112,7 +112,7 @@ class Aternos(commands.Cog):
                     await ctx.send("Your server owner has not registered the server cookies yet! Sorry, but we may not open the server.")
                     return
             try:
-                server = AternosAPI(headers=cookies["headerCookie"], TOKEN=cookies["token"])
+                server = AternosAPI(*cookies)
             except KeyError:
                 await ctx.send("Your server owner has not registered the server cookies yet! Sorry, but we may not open the server.")
                 return
@@ -146,7 +146,7 @@ class Aternos(commands.Cog):
                     await ctx.send("Your server owner has not registered the server cookies yet! Sorry, but we may not open the server.")
                     return
             try:
-                server = AternosAPI(headers=cookies["headerCookie"], TOKEN=cookies["token"])
+                server = AternosAPI(*cookies)
             except KeyError:
                 await ctx.send("Your server owner has not registered the server cookies yet! Sorry, but we may not open the server.")
                 return
