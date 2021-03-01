@@ -15,7 +15,7 @@ secret = config("AWSSECRET") # AWS Secret Access Key
 client = boto3.client("s3", aws_access_key_id=key, aws_secret_access_key=secret) # Initialize boto3 client
 
 def getPrefix(bot, message):
-    prefixes = json.loads(client.get_object(Bucket="ansonbotaws", Key="youtube.json")["Body"].read())
+    prefixes = json.loads(client.get_object(Bucket="ansonbotaws", Key="prefix.json")["Body"].read())
     try:
         return prefixes[str(message.guild.id)]
     except KeyError: # No prefix set up yet, likely a new guild
